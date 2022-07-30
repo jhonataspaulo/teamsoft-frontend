@@ -11,7 +11,6 @@ export const Header: React.FC<{}> = (): JSX.Element => {
         <Options>
           <div>Address</div>
           <div>Input</div>
-          <div>Input</div>
           <div>Login</div>
           <div>Carrinho</div>
         </Options>

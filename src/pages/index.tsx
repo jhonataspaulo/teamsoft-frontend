@@ -28,6 +28,7 @@ const ProductSection = styled.section`
   min-width: 375px;
   margin: 0 auto;
   justify-content: center;
+  padding: 0 6rem;
 
   @media (max-width: 992px) {
     grid-template-columns: repeat(2, max(437px, 50%));

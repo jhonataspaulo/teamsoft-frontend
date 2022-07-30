@@ -13,7 +13,6 @@ export const ProductIngredients: React.FC<{}> = (): JSX.Element => {
 
 const Wrapper = styled.div`
   background-color: #ccc;
-  color: #000;
   padding: 2.4rem;
 `
 
