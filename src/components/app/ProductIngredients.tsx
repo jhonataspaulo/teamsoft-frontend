@@ -131,18 +131,13 @@ export const ProductIngredients: React.FC<{}> = (): JSX.Element => {
 }
 
 const Wrapper = styled.div`
-  /* background-color: #ccc; */
   padding: 2.4rem;
   overflow: hidden;
-
-  @media (max-width: 576px) {
-    overflow: none;
-  }
 `
 
 const WrapperIngredients = styled.div`
   height: 100%;
-  max-width: 43.9rem;
+  max-width: max(43.9rem, 100%);
   margin: 0 auto;
   border: 0.1rem solid ${props => props.theme.colors.GRAY_DARK};
   border-radius: 0.8rem;
@@ -151,7 +146,6 @@ const WrapperIngredients = styled.div`
   flex-direction: column;
 
   @media (max-width: 576px) {
-    /* height: auto; */
     border: none;
     padding: 0;
   }
@@ -183,6 +177,10 @@ const List = styled.div`
   ::-webkit-scrollbar-thumb:hover {
     background: #${props => props.theme.colors.YELLOW_DARK};
   }
+
+  @media (max-width: 576px) {
+    padding-right: 0;
+  }
 `
 const Actions = styled.div`
   padding: 0.8rem 0;
@@ -208,7 +206,11 @@ const HeaderList = styled.div`
   }
 `
 
-const ProductList = styled.div``
+const ProductList = styled.div`
+  @media (max-width: 576px) {
+    width: 100%;
+  }
+`
 
 const Total = styled.div`
   display: flex;

@@ -39,6 +39,7 @@ const Wrapper = styled.div`
 
   @media (max-width: 576px) {
     overflow-y: unset;
+    padding: 3.2rem 3.2rem;
   }
 `
 

@@ -2,6 +2,11 @@ import Image from 'next/image'
 import React from 'react'
 import styled from 'styled-components'
 import logo from '../../assets/logo.png'
+import { Address } from '../Address'
+import { Cart } from '../Cart'
+import { CaretLeftIcon } from '../Icons'
+import { Login } from '../Login'
+import { Search } from '../Search'
 
 export const Header: React.FC<{}> = (): JSX.Element => {
   return (
@@ -9,11 +14,14 @@ export const Header: React.FC<{}> = (): JSX.Element => {
       <HeaderContent>
         <Image src={logo} width={225} />
         <Options>
-          <div>Address</div>
-          <div>Input</div>
-          <div>Login</div>
-          <div>Carrinho</div>
+          <Address />
+          <Search />
+          <Login />
+          <Cart />
         </Options>
+        <CaretBox>
+          <CaretLeftIcon height={16} />
+        </CaretBox>
       </HeaderContent>
     </Wrapper>
   )
@@ -27,6 +35,11 @@ const Wrapper = styled.header`
   position: sticky;
   top: 0;
   z-index: 2;
+
+  @media (max-width: 576px) {
+    justify-content: center;
+    padding: 1.6rem;
+  }
 `
 
 const HeaderContent = styled.div`
@@ -36,10 +49,26 @@ const HeaderContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  position: relative;
+
+  @media (max-width: 576px) {
+    justify-content: center;
+  }
 `
 
 const Options = styled.div`
   display: flex;
   align-items: center;
   gap: 2.4rem;
+`
+
+const CaretBox = styled.div`
+  display: none;
+
+  @media (max-width: 576px) {
+    position: absolute;
+    left: 0;
+    display: block;
+  }
 `

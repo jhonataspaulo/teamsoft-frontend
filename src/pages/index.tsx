@@ -36,6 +36,7 @@ const ProductSection = styled.section`
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, max(320px, 25%));
+    padding: 0 1.6rem;
   }
 
   @media (max-width: 576px) {
