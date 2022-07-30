@@ -14,6 +14,9 @@ export default createGlobalStyle`
     body {
         color: ${props => props.theme.colors.GRAY_DARK};
         font: 400 1.6rem Roboto, sans-serif;
-        overflow: hidden;
     }
+
+
+
+
 `
