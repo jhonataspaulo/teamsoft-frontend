@@ -17,7 +17,7 @@ export const ProductInfo: React.FC<{}> = (): JSX.Element => {
           cheddar, molho cheddar e pão mix de gergelim.
         </p>
         <Prices>
-          <span>R$ 32,99</span>
+          <span>R$ 31,99</span>
           <span>R$ 34,95</span>
         </Prices>
       </Info>
@@ -36,11 +36,19 @@ const Wrapper = styled.div`
   ::-webkit-scrollbar {
     width: 0;
   }
+
+  @media (max-width: 576px) {
+    overflow-y: unset;
+  }
 `
 
 const BoxImage = styled.div`
-  max-width: 43.7rem;
+  max-width: 513rem;
   align-self: center;
+
+  @media (max-width: 576px) {
+    max-width: 25rem;
+  }
 `
 
 const Info = styled.div`
@@ -50,23 +58,37 @@ const Info = styled.div`
     font-weight: 500;
     font-size: 2.8rem;
     padding-bottom: 4rem;
+    font-weight: 500;
+
+    @media (max-width: 576px) {
+      font-size: 1.8rem;
+      padding-bottom: 1.6rem;
+    }
   }
 
   p {
     font-size: 2rem;
+
+    @media (max-width: 576px) {
+      font-size: 1.6rem;
+    }
   }
 `
 const Prices = styled.div`
   margin-top: 3.3rem;
+  font-size: 3.2rem;
+
+  @media (max-width: 576px) {
+    font-size: 1.6rem;
+    margin-top: 1.6rem;
+  }
 
   span:first-child {
     color: ${props => props.theme.colors.SECONDARY_DEFAULT};
-    font-size: 3.2rem;
     margin-right: 1.7rem;
   }
 
   span:last-child {
-    font-size: 3.2rem;
     text-decoration: line-through;
   }
 `

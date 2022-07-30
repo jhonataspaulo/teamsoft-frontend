@@ -40,6 +40,8 @@ const ProductSection = styled.section`
 
   @media (max-width: 576px) {
     grid-template-columns: 1fr;
+    padding: 0;
+    height: auto;
   }
 `
 
