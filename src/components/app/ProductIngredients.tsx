@@ -1,65 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
+import { IIngredient } from '../../context/CartContext'
+import { useCart } from '../../hooks/useCart'
 import { formatCurrencyToBr } from '../../utils/FormatCurrencyToBr'
 import { Check } from '../Check'
 import { MinusIcon, PlusIcon } from '../Icons'
 import { ProductItem } from './ProductItem'
 
-type Product = {
-  id: number
-  title: string
-  price: number
-  qtd: number
-}
-
 export const ProductIngredients: React.FC<{}> = (): JSX.Element => {
-  const [products, setProducts] = useState<Product[]>([
-    { id: 1, title: 'Queijo Cheddar', price: 4.99, qtd: 0 },
-    { id: 2, title: 'Cebola crispy', price: 1.5, qtd: 0 },
-    { id: 3, title: 'Molho cheddar', price: 3.5, qtd: 0 },
-    { id: 4, title: 'Molho de picanha', price: 3.5, qtd: 0 },
-  ])
-  const [productOfferPrice, setProductOfferPrice] = useState(31.99)
+  const {
+    ingredients,
+    getIngredientQuantity,
+    removeIntgredientFromList,
+    addIntgredientToList,
+    addProductToList,
+    removeProductFromList,
+    currentList,
+    amount,
+    addToCart,
+  } = useCart()
+
   const [checkedValue, setCheckedValue] = useState(false)
-  const [amount, setAmout] = useState(productOfferPrice)
+  //   const [amount, setAmout] = useState(productOfferPrice)
   const [productQtd, setProductQtd] = useState(1)
 
   const theme = useTheme()
 
-  const ingredientIncrement = (id: number) => {
-    const newProducts = products.map(prod => {
-      if (prod.id === id) {
-        setAmout(amount + prod.price)
-        return { ...prod, qtd: prod.qtd + 1 }
-      }
-      return prod
-    })
-    setProducts(newProducts)
+  const handleAddToCart = () => {
+    addToCart()
   }
 
-  const ingredientDecrement = (id: number) => {
-    const newProducts = products.map(prod => {
-      if (prod.id === id) {
-        if (prod.qtd > 0) {
-          setAmout(amount - prod.price)
-          return { ...prod, qtd: prod.qtd - 1 }
-        }
-      }
-      return prod
-    })
-    setProducts(newProducts)
+  const handleAddProduct = () => {
+    addProductToList()
   }
 
-  const productIncrement = () => {
-    setAmout(amount + productOfferPrice)
-    setProductQtd(productQtd + 1)
+  const handleRemoveProduct = () => {
+    removeProductFromList()
   }
 
-  const productDecrement = () => {
-    if (productQtd > 1) {
-      setAmout(amount - productOfferPrice)
-      setProductQtd(productQtd - 1)
-    }
+  const handleAddIngredient = (ingredient: IIngredient) => {
+    addIntgredientToList(ingredient)
+  }
+
+  const handleRemoveIngredient = (ingredient: IIngredient) => {
+    removeIntgredientFromList(ingredient)
   }
 
   return (
@@ -71,16 +55,16 @@ export const ProductIngredients: React.FC<{}> = (): JSX.Element => {
             <span>Até 8 ingredientes</span>
           </HeaderList>
           <ProductList>
-            {products.map((prod: Product) => (
+            {ingredients.map((ingredient: IIngredient) => (
               <ProductItem
-                key={prod.id}
-                title={prod.title}
-                price={prod.price}
-                qtd={prod.qtd}
-                onMinus={() => ingredientDecrement(prod.id)}
-                onPlus={() => ingredientIncrement(prod.id)}
+                key={ingredient.id}
+                title={ingredient.title}
+                price={ingredient.price}
+                qtd={getIngredientQuantity(ingredient.id)}
+                onMinus={() => handleRemoveIngredient(ingredient)}
+                onPlus={() => handleAddIngredient(ingredient)}
                 color={
-                  prod.qtd === 0
+                  getIngredientQuantity(ingredient.id) === 0
                     ? theme.colors.GRAY_LIGHT
                     : theme.colors.RED_DELIVERIZE
                 }
@@ -109,20 +93,20 @@ export const ProductIngredients: React.FC<{}> = (): JSX.Element => {
           <Buttons>
             <Count>
               <MinusIcon
-                onClick={productDecrement}
+                onClick={handleRemoveProduct}
                 color={
-                  productQtd === 1
+                  currentList?.productList.quantity === 1
                     ? theme.colors.GRAY_LIGHT
                     : theme.colors.RED_DELIVERIZE
                 }
               />
-              <span>{productQtd}</span>
+              <span>{currentList?.productList.quantity}</span>
               <PlusIcon
-                onClick={productIncrement}
+                onClick={handleAddProduct}
                 color={theme.colors.RED_DELIVERIZE}
               />
             </Count>
-            <button>Avançar</button>
+            <button onClick={handleAddToCart}>Adicionar</button>
           </Buttons>
         </Actions>
       </WrapperIngredients>

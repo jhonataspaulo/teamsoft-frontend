@@ -3,22 +3,23 @@ import React from 'react'
 import styled from 'styled-components'
 
 import burger from '../../assets/burger.png'
+import { useCart } from '../../hooks/useCart'
+import { formatCurrencyToBr } from '../../utils/FormatCurrencyToBr'
 
 export const ProductInfo: React.FC<{}> = (): JSX.Element => {
+  const { currentProduct } = useCart()
+
   return (
     <Wrapper>
       <BoxImage>
         <Image src={burger} alt="Imagem de hamburger com cheddar e bacon " />
       </BoxImage>
       <Info>
-        <h1>Oferta Picanha Cheddar Bacon</h1>
-        <p>
-          Hambúrguer de picanha, molho de picanha, cebola crispy, bacon, queijo
-          cheddar, molho cheddar e pão mix de gergelim.
-        </p>
+        <h1>{currentProduct.title}</h1>
+        <p>{currentProduct.description}</p>
         <Prices>
-          <span>R$ 31,99</span>
-          <span>R$ 34,95</span>
+          <span>{formatCurrencyToBr(currentProduct.priceOffer)}</span>
+          <span>{formatCurrencyToBr(currentProduct.price)}</span>
         </Prices>
       </Info>
     </Wrapper>

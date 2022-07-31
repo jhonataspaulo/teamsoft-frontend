@@ -1,17 +1,24 @@
 import React from 'react'
 import styled, { useTheme } from 'styled-components'
-import { ShoppingCartIcon, UserIcon } from './Icons'
+import { ShoppingCartIcon } from './Icons'
+import { Popover } from './Popover'
 
-export const Cart = (): JSX.Element => {
+type Props = {
+  visible: boolean
+  qtd: number
+}
+
+export const Cart: React.FC<Props> = (props): JSX.Element => {
   const theme = useTheme()
 
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       <CartBox>
         <ShoppingCartIcon color={theme.colors.PRIMARY_DEFAULT} />
-        <DotWrapper>
-          <span>1</span>
+        <DotWrapper {...props}>
+          <span>{props.qtd}</span>
         </DotWrapper>
+        <Popover visible={props.visible} />
       </CartBox>
       <span>Carrinho</span>
     </Wrapper>
@@ -36,7 +43,7 @@ const Wrapper = styled.div`
 const CartBox = styled.div`
   position: relative;
 `
-const DotWrapper = styled.div`
+const DotWrapper = styled.div<Props>`
   width: 1.6rem;
   height: 1.6rem;
   border-radius: 0.8rem;
@@ -48,7 +55,6 @@ const DotWrapper = styled.div`
   right: 0;
   top: 0;
 
-  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -56,4 +62,6 @@ const DotWrapper = styled.div`
     color: ${({ theme }) => theme.colors.WHITE};
     font-size: 1rem;
   }
+
+  display: ${props => (props.qtd > 0 ? 'flex' : 'none')};
 `

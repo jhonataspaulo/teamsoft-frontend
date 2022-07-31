@@ -1,7 +1,8 @@
-import Image from 'next/image'
 import React from 'react'
+import Image from 'next/image'
 import styled from 'styled-components'
 import logo from '../../assets/logo.png'
+import { useCart } from '../../hooks/useCart'
 import { Address } from '../Address'
 import { Cart } from '../Cart'
 import { CaretLeftIcon } from '../Icons'
@@ -9,6 +10,8 @@ import { Login } from '../Login'
 import { Search } from '../Search'
 
 export const Header: React.FC<{}> = (): JSX.Element => {
+  const { cart, newCartNotification } = useCart()
+
   return (
     <Wrapper>
       <HeaderContent>
@@ -17,7 +20,7 @@ export const Header: React.FC<{}> = (): JSX.Element => {
           <Address />
           <Search />
           <Login />
-          <Cart />
+          <Cart visible={newCartNotification} qtd={cart?.length || 0} />
         </Options>
         <CaretBox>
           <CaretLeftIcon height={16} />
