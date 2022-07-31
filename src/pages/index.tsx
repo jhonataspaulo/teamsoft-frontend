@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
 import styled from 'styled-components'
 import { Header } from '../components/app/Header'
 import { ProductInfo } from '../components/app/ProductInfo'
 import { ProductIngredients } from '../components/app/ProductIngredients'
 
-const Product: React.FC = () => {
+const Product: React.FC<{}> = () => {
   return (
     <div>
       <Head>

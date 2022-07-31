@@ -9,9 +9,9 @@ type Props = {
 export const Popover: React.FC<Props> = (props): JSX.Element => {
   const { cart } = useCart()
 
-  const product = cart ? cart[cart.length - 1] : null
+  const itemCart = cart ? cart[cart.length - 1] : null
 
-  if (cart) {
+  if (itemCart) {
     return (
       <Wrapper {...props}>
         <Header>
@@ -19,13 +19,12 @@ export const Popover: React.FC<Props> = (props): JSX.Element => {
           <span>Adicionado com Sucesso!</span>
         </Header>
         <Body>
-          <strong>{product?.productList.product.title}</strong>
-          {product?.ingredientsList !== undefined &&
-            product?.ingredientsList.length > 0 && <span>Ingredientes:</span>}
+          <strong>{itemCart.product.name}</strong>
+          {itemCart.items.length > 0 && <span>Ingredientes:</span>}
           <ul>
-            {product?.ingredientsList.map(item => (
-              <li key={item.ingredient.id}>
-                {item.quantity} {item.ingredient.title}
+            {itemCart.items.map(i => (
+              <li key={i.item.id}>
+                {i.quantity} {i.item.nm_item}
               </li>
             ))}
           </ul>

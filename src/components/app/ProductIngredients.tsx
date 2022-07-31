@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled, { useTheme } from 'styled-components'
-import { IIngredient } from '../../context/CartContext'
+import { ItemsType, ListIngredients, ProductCart } from '../../@types/Product'
 import { useCart } from '../../hooks/useCart'
 import { formatCurrencyToBr } from '../../utils/FormatCurrencyToBr'
 import { Check } from '../Check'
@@ -9,41 +9,124 @@ import { ProductItem } from './ProductItem'
 
 export const ProductIngredients: React.FC<{}> = (): JSX.Element => {
   const {
-    ingredients,
-    getIngredientQuantity,
-    removeIntgredientFromList,
-    addIntgredientToList,
-    addProductToList,
-    removeProductFromList,
-    currentList,
+    items,
     amount,
-    addToCart,
+    setAmount,
+    product,
+    cart,
+    setCart,
+    resetAmount,
+    limit,
   } = useCart()
-
   const [checkedValue, setCheckedValue] = useState(false)
-  //   const [amount, setAmout] = useState(productOfferPrice)
-  const [productQtd, setProductQtd] = useState(1)
+
+  const [listIngredients, setListIngredients] = useState<ListIngredients[]>([])
+  const [productQuantity, setProductQuantity] = useState(1)
+  const [limitItems, setLimitItems] = useState(0)
 
   const theme = useTheme()
 
-  const handleAddToCart = () => {
-    addToCart()
+  const addItem = (item: ItemsType) => {
+    if (limitItems === limit) {
+      alert(`número máximo de ítens é: ${limit}`)
+    } else {
+      if (!listIngredients) {
+        const newList: ListIngredients = {
+          item,
+          quantity: 1,
+        }
+        setAmount(amount + item.vl_item)
+        setLimitItems(limitItems + 1)
+        setListIngredients([newList])
+      } else {
+        const newList = [...listIngredients]
+        const idx = listIngredients.map(i => i.item.id).indexOf(item.id)
+        if (idx > -1) {
+          newList[idx].quantity += 1
+          setAmount(amount + item.vl_item)
+          setLimitItems(limitItems + 1)
+          setListIngredients(newList)
+        } else {
+          newList.push({
+            item,
+            quantity: 1,
+          })
+          setAmount(amount + item.vl_item)
+          setLimitItems(limitItems + 1)
+          setListIngredients(newList)
+        }
+      }
+    }
   }
 
-  const handleAddProduct = () => {
-    addProductToList()
+  const removeItem = (item: ItemsType) => {
+    if (listIngredients) {
+      const newList = [...listIngredients]
+      const idx = listIngredients.map(i => i.item.id).indexOf(item.id)
+      if (idx > -1) {
+        if (newList[idx].quantity > 1) {
+          newList[idx].quantity -= 1
+          setAmount(amount - item.vl_item)
+          if (limitItems > 0) {
+            setLimitItems(limitItems - 1)
+          }
+          setListIngredients(newList)
+        } else {
+          const list = newList.filter(i => i.item.id !== item.id)
+          setAmount(amount - item.vl_item)
+          if (limitItems > 0) {
+            setLimitItems(limitItems - 1)
+          }
+          setListIngredients(list)
+        }
+      }
+    }
   }
 
-  const handleRemoveProduct = () => {
-    removeProductFromList()
+  const getQuantity = (id: number): number => {
+    if (listIngredients) {
+      const item = listIngredients.filter(i => i.item.id === id)[0]
+      if (item) return item.quantity
+    }
+    return 0
   }
 
-  const handleAddIngredient = (ingredient: IIngredient) => {
-    addIntgredientToList(ingredient)
+  const addProduct = () => {
+    setProductQuantity(productQuantity + 1)
+    setAmount(amount + product.vl_discount)
   }
 
-  const handleRemoveIngredient = (ingredient: IIngredient) => {
-    removeIntgredientFromList(ingredient)
+  const removeProduct = () => {
+    if (productQuantity > 1) {
+      setProductQuantity(productQuantity - 1)
+      setAmount(amount - product.vl_discount)
+    }
+  }
+
+  const addToCart = () => {
+    const newProductCart: ProductCart = {
+      items: listIngredients,
+      product: {
+        name: product.nm_product,
+        qtd: productQuantity,
+      },
+    }
+
+    if (cart) {
+      let newCart = [...cart]
+      newCart.push(newProductCart)
+      setCart(newCart)
+      setListIngredients([])
+      setProductQuantity(1)
+      setLimitItems(0)
+      resetAmount()
+    } else {
+      setCart([newProductCart])
+      setListIngredients([])
+      setProductQuantity(1)
+      setLimitItems(0)
+      resetAmount()
+    }
   }
 
   return (
@@ -55,21 +138,22 @@ export const ProductIngredients: React.FC<{}> = (): JSX.Element => {
             <span>Até 8 ingredientes</span>
           </HeaderList>
           <ProductList>
-            {ingredients.map((ingredient: IIngredient) => (
-              <ProductItem
-                key={ingredient.id}
-                title={ingredient.title}
-                price={ingredient.price}
-                qtd={getIngredientQuantity(ingredient.id)}
-                onMinus={() => handleRemoveIngredient(ingredient)}
-                onPlus={() => handleAddIngredient(ingredient)}
-                color={
-                  getIngredientQuantity(ingredient.id) === 0
-                    ? theme.colors.GRAY_LIGHT
-                    : theme.colors.RED_DELIVERIZE
-                }
-              />
-            ))}
+            {items &&
+              items.map(item => (
+                <ProductItem
+                  key={item.id}
+                  title={item.nm_item}
+                  price={item.vl_item}
+                  onMinus={() => removeItem(item)}
+                  onPlus={() => addItem(item)}
+                  qtd={getQuantity(item.id)}
+                  color={
+                    getQuantity(item.id) > 0
+                      ? theme.colors.RED_DELIVERIZE
+                      : theme.colors.GRAY_LIGHT
+                  }
+                />
+              ))}
             <Cutlery>
               <HeaderCutlety>
                 <span>Precisa de talher?</span>
@@ -93,20 +177,20 @@ export const ProductIngredients: React.FC<{}> = (): JSX.Element => {
           <Buttons>
             <Count>
               <MinusIcon
-                onClick={handleRemoveProduct}
+                onClick={removeProduct}
                 color={
-                  currentList?.productList.quantity === 1
+                  productQuantity === 1
                     ? theme.colors.GRAY_LIGHT
                     : theme.colors.RED_DELIVERIZE
                 }
               />
-              <span>{currentList?.productList.quantity}</span>
+              <span>{productQuantity}</span>
               <PlusIcon
-                onClick={handleAddProduct}
+                onClick={addProduct}
                 color={theme.colors.RED_DELIVERIZE}
               />
             </Count>
-            <button onClick={handleAddToCart}>Adicionar</button>
+            <button onClick={addToCart}>Adicionar</button>
           </Buttons>
         </Actions>
       </WrapperIngredients>

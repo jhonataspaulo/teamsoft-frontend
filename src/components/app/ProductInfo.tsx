@@ -7,27 +7,30 @@ import { useCart } from '../../hooks/useCart'
 import { formatCurrencyToBr } from '../../utils/FormatCurrencyToBr'
 
 export const ProductInfo: React.FC<{}> = (): JSX.Element => {
-  const { currentProduct } = useCart()
+  const { product } = useCart()
 
-  return (
-    <Wrapper>
-      <BoxImage>
-        <Image src={burger} alt="Imagem de hamburger com cheddar e bacon " />
-      </BoxImage>
-      <Info>
-        <h1>{currentProduct.title}</h1>
-        <p>{currentProduct.description}</p>
-        <Prices>
-          <span>{formatCurrencyToBr(currentProduct.priceOffer)}</span>
-          <span>{formatCurrencyToBr(currentProduct.price)}</span>
-        </Prices>
-      </Info>
-    </Wrapper>
-  )
+  if (!product) {
+    return <p>Carregando produto</p>
+  } else {
+    return (
+      <Wrapper>
+        <BoxImage>
+          <Image src={burger} alt="Imagem de hamburger com cheddar e bacon " />
+        </BoxImage>
+        <Info>
+          <h1>{product.nm_product}</h1>
+          <p>{product.description}</p>
+          <Prices>
+            <span>{formatCurrencyToBr(product.vl_discount)}</span>
+            <span>{formatCurrencyToBr(product.vl_price)}</span>
+          </Prices>
+        </Info>
+      </Wrapper>
+    )
+  }
 }
 
 const Wrapper = styled.div`
-  /* background-color: #c2c2c2; */
   padding: 3.2rem 2.4rem;
   overflow-y: auto;
   display: flex;

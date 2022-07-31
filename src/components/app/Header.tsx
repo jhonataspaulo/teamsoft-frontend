@@ -10,7 +10,7 @@ import { Login } from '../Login'
 import { Search } from '../Search'
 
 export const Header: React.FC<{}> = (): JSX.Element => {
-  const { cart, newCartNotification } = useCart()
+  const { cart, newProduct } = useCart()
 
   return (
     <Wrapper>
@@ -20,7 +20,7 @@ export const Header: React.FC<{}> = (): JSX.Element => {
           <Address />
           <Search />
           <Login />
-          <Cart visible={newCartNotification} qtd={cart?.length || 0} />
+          <Cart visible={newProduct} qtd={cart?.length || 0} />
         </Options>
         <CaretBox>
           <CaretLeftIcon height={16} />
